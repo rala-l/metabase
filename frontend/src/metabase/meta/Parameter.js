@@ -52,11 +52,11 @@ export const PARAMETER_OPERATOR_TYPES = {
       operator: "<=",
       name: t`Less than or equal to`,
     },
-    {
-      operator: "all-options",
-      name: t`All options`,
-      description: t`Contains all of the above`,
-    },
+    // {
+    //   operator: "all-options",
+    //   name: t`All options`,
+    //   description: t`Contains all of the above`,
+    // },
   ],
   string: [
     {
@@ -84,11 +84,11 @@ export const PARAMETER_OPERATOR_TYPES = {
       name: t`Ends with`,
       description: t`Match values that end with the entered text.`,
     },
-    {
-      operator: "all-options",
-      name: t`All options`,
-      description: t`Users can pick from any of the above`,
-    },
+    // {
+    //   operator: "all-options",
+    //   name: t`All options`,
+    //   description: t`Users can pick from any of the above`,
+    // },
   ],
 };
 
