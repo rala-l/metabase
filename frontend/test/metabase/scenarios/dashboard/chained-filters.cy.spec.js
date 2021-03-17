@@ -160,14 +160,14 @@ describe("scenarios > dashboard > chained filter", () => {
         .parent()
         .within(() => {
           // turn on the toggle
-          cy.findByText("State")
+          cy.findByText("Location - Matches exactly")
             .parent()
             .within(() => {
               cy.get("a").click();
             });
 
           // open up the list of linked columns
-          cy.findByText("State").click();
+          cy.findByText("Location - Matches exactly").click();
           // It's hard to assert on the "table.column" pairs.
           // We just assert that the headers are there to know that something appeared.
           cy.findByText("Filtering column");
