@@ -10,47 +10,41 @@ executors:
     working_directory: /home/circleci/metabase/metabase/
     docker:
       # CircleCI base image
-      - image: cimg/base:2020.01
+      - image: cimg/base:2021.03
 
   clojure:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
 
   node:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      # - image: circleci/node:7-browsers
-      - image: circleci/clojure:lein-2.8.1-node-browsers
+      - image: cimg/node:lts-browsers
 
   clojure-and-node:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1-node-browsers
+      - image: circleci/clojure:lein-2.9.5-node-browsers
 
-  # This is a special image that is based on clojure-and-node but includes extras like gettext and the Clojure CLI
-  # tools. See https://github.com/metabase/metabase-docker-ci for more information. You shouldn't use this image
-  # unless you need the extra stuff -- because it's not an official Circle image, the extra layers won't get cached
-  # and it might take longer to spin this up.
-  metabase-ci:
+  cypress:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: metabase/ci:2020-11-30
-
+      - image: cypress/base:12
   # Java 11 tests also test Metabase with the at-rest encryption enabled. See
   # https://metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html for an explanation of
   # what this means.
   java-11:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:openjdk-11-lein-2.8.1
+      - image: circleci/clojure:openjdk-11-lein-2.9.5
         environment:
           MB_ENCRYPTION_SECRET_KEY: Orw0AAyzkO/kPTLJRxiyKoBHXa/d6ZcO+p+gpZO/wSQ=
 
   postgres-9-6:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: postgres
           MB_DB_PORT: 5432
@@ -66,24 +60,24 @@ executors:
   postgres-latest:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: postgres
           MB_DB_PORT: 5432
           MB_DB_HOST: localhost
-          MB_DB_DBNAME: metabase_test
-          MB_DB_USER: metabase_test
-          MB_POSTGRESQL_TEST_USER: metabase_test
-      - image: postgres:latest
+          MB_DB_DBNAME: circle_test
+          MB_DB_USER: circle_test
+          MB_POSTGRESQL_TEST_USER: circle_test
+      - image: circleci/postgres:latest
         environment:
-          POSTGRES_USER: metabase_test
-          POSTGRES_DB: metabase_test
+          POSTGRES_USER: circle_test
+          POSTGRES_DB: circle_test
           POSTGRES_HOST_AUTH_METHOD: trust
 
   mysql-5-7:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: mysql
           MB_DB_HOST: localhost
@@ -96,7 +90,7 @@ executors:
   mysql-latest:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: mysql
           MB_DB_HOST: localhost
@@ -109,7 +103,7 @@ executors:
   mariadb-10-2:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: mysql
           MB_DB_HOST: localhost
@@ -122,30 +116,30 @@ executors:
   mariadb-latest:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_DB_TYPE: mysql
           MB_DB_HOST: localhost
           MB_DB_PORT: 3306
-          MB_DB_DBNAME: metabase_test
+          MB_DB_DBNAME: circle_test
           MB_DB_USER: root
           MB_MYSQL_TEST_USER: root
-      - image: mariadb:latest
+      - image: circleci/mariadb:latest
         environment:
-          MYSQL_DATABASE: metabase_test
+          MYSQL_DATABASE: circle_test
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
   mongo:
      working_directory: /home/circleci/metabase/metabase/
      docker:
-       - image: circleci/clojure:lein-2.8.1
+       - image: circleci/clojure:lein-2.9.5
        - image: circleci/mongo:4.0
 
   presto:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
       - image: metabase/presto-mb-ci
         environment:
           JAVA_TOOL_OPTIONS: "-Xmx1g"
@@ -153,19 +147,19 @@ executors:
   sparksql:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
       - image: metabase/spark:2.1.1
 
   vertica:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
       - image: sumitchawla/vertica
 
   sqlserver:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1
+      - image: circleci/clojure:lein-2.9.5
         environment:
           MB_SQLSERVER_TEST_HOST: localhost
           MB_SQLSERVER_TEST_PASSWORD: 'P@ssw0rd'
@@ -179,19 +173,19 @@ executors:
   fe-mongo-4:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1-node-browsers
+      - image: circleci/clojure:lein-2.9.5-node-browsers
       - image: metabase/qa-databases:mongo-sample-4.0
 
   fe-postgres-12:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1-node-browsers
+      - image: circleci/clojure:lein-2.9.5-node-browsers
       - image: metabase/qa-databases:postgres-sample-12
 
   fe-mysql-8:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.8.1-node-browsers
+      - image: circleci/clojure:lein-2.9.5-node-browsers
       - image: metabase/qa-databases:mysql-sample-8
 
 ########################################################################################################################
@@ -527,7 +521,7 @@ jobs:
 
   check-migrations:
     executor:
-      metabase-ci
+      clojure
     steps:
       - attach-workspace
       - create-checksum-file:
@@ -662,7 +656,8 @@ jobs:
                 path: /home/circleci/metabase/metabase/target/junit
 
   test-build-scripts:
-    executor: metabase-ci
+    parallelism: 6
+    executor: clojure
     steps:
       - attach-workspace
       - run-on-change:
@@ -746,7 +741,7 @@ jobs:
   # Unlike the other build-uberjar steps, this step should be run once overall and the results can be shared between
   # OSS and EE uberjars.
   build-uberjar-drivers:
-    executor: metabase-ci
+    executor: clojure
     parameters:
       <<: *Params
     steps:
@@ -798,7 +793,7 @@ jobs:
   build-uberjar-frontend:
     parameters:
       <<: *Params
-    executor: metabase-ci
+    executor: clojure
     steps:
       - attach-workspace
       - run-on-change:
@@ -821,7 +816,7 @@ jobs:
   build-uberjar:
     parameters:
       <<: *Params
-    executor: metabase-ci
+    executor: clojure
     steps:
       - attach-workspace
       - run-on-change:
@@ -863,10 +858,11 @@ jobs:
                   - /home/circleci/metabase/metabase/resources/version.properties
 
   fe-tests-cypress:
+    parallelism: 16
     parameters:
       e:
         type: executor
-        default: clojure-and-node
+        default: cypress
       cypress-group:
         type: string
       only-single-database:
@@ -907,12 +903,14 @@ jobs:
                       path: /home/circleci/metabase/metabase/cypress
                   - store_test_results:
                       path: cypress/results
+    
 
   fe-tests-cypress-smoketest:
+    parallelism: 16
     parameters:
       e:
         type: executor
-        default: clojure-and-node
+        default: cypress
       cypress-group:
         type: string
       <<: *Params
