@@ -86,8 +86,6 @@ RUN INTERACTIVE=false MB_EDITION=$MB_EDITION bin/build
 
 FROM adoptopenjdk/openjdk11:alpine-jre as runner
 
-WORKDIR /app
-
 ENV FC_LANG en-US LC_CTYPE en_US.UTF-8
 
 # dependencies
@@ -100,16 +98,12 @@ RUN apk -U upgrade &&  \
     /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias azure-cert -file /app/certs/DigiCertGlobalRootG2.crt.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit && \
     mkdir -p /plugins && chmod a+rwx /plugins
 
-# add fixed cacerts
-COPY --from=builder /etc/ssl/certs/java/cacerts /opt/java/openjdk/lib/security/cacerts
-
 # add Metabase script and uberjar
-RUN mkdir -p bin target/uberjar
-COPY --from=builder /app/source/target/uberjar/metabase.jar /app/target/uberjar/
-COPY --from=builder /app/source/bin/start /app/bin/
+COPY --from=builder /app/source/target/uberjar/metabase.jar /app/
+COPY bin/docker/run_metabase.sh /app/bin/
 
 # expose our default runtime port
 EXPOSE 3000
 
 # run it
-ENTRYPOINT ["/app/bin/start"]
+ENTRYPOINT ["/app/bin/run_metabase.sh"]
