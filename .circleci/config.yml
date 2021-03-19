@@ -12,32 +12,28 @@ executors:
       # CircleCI base image
       - image: cimg/base:2021.03
 
-  clojure:
+  metabase-ci:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:tools-deps-1.10.2.796
+      - image: metabase/ci:latest
   
   node:
     working_directory: /home/circleci/metabase/metabase/
     docker:
       - image: cimg/node:lts-browsers
 
-  clojure-and-node:
-    working_directory: /home/circleci/metabase/metabase/
-    docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
-
   cypress:
     working_directory: /home/circleci/metabase/metabase/
     docker:
       - image: cypress/base:12
+  
   # Java 11 tests also test Metabase with the at-rest encryption enabled. See
   # https://metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html for an explanation of
   # what this means.
   java-11:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:openjdk-11-lein-2.9.5
+      - image: metabase/ci:latest
         environment:
           MB_ENCRYPTION_SECRET_KEY: Orw0AAyzkO/kPTLJRxiyKoBHXa/d6ZcO+p+gpZO/wSQ=
 
@@ -173,19 +169,19 @@ executors:
   fe-mongo-4:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
+      - image: metabase/ci:latest
       - image: metabase/qa-databases:mongo-sample-4.0
 
   fe-postgres-12:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
+      - image:metabase/ci:latest
       - image: metabase/qa-databases:postgres-sample-12
 
   fe-mysql-8:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
+      - image: metabase/ci:latest
       - image: metabase/qa-databases:mysql-sample-8
 
 ########################################################################################################################
@@ -521,7 +517,7 @@ jobs:
 
   check-migrations:
     executor:
-      clojure
+      metabase-ci
     steps:
       - attach-workspace
       - create-checksum-file:
@@ -544,7 +540,7 @@ jobs:
 ########################################################################################################################
 
   be-deps:
-    executor: clojure
+    executor: metabase-ci
     parameters:
       <<: *Params
     steps:
@@ -566,7 +562,7 @@ jobs:
     parameters:
       e:
         type: executor
-        default: clojure
+        default: metabase-ci
       before-steps:
         type: steps
         default: []
@@ -603,7 +599,7 @@ jobs:
                 edition: << parameters.edition >>
 
   be-linter-reflection-warnings:
-    executor: clojure
+    executor: metabase-ci
     steps:
       - attach-workspace
       - run-on-change:
@@ -619,7 +615,7 @@ jobs:
     parameters:
       e:
         type: executor
-        default: clojure
+        default: metabase-ci
       driver:
         type: string
       timeout:
@@ -657,7 +653,7 @@ jobs:
 
   test-build-scripts:
     parallelism: 6
-    executor: clojure
+    executor: metabase-ci
     steps:
       - attach-workspace
       - run-on-change:
@@ -741,7 +737,7 @@ jobs:
   # Unlike the other build-uberjar steps, this step should be run once overall and the results can be shared between
   # OSS and EE uberjars.
   build-uberjar-drivers:
-    executor: clojure
+    executor: metabase-ci
     parameters:
       <<: *Params
     steps:
@@ -793,7 +789,7 @@ jobs:
   build-uberjar-frontend:
     parameters:
       <<: *Params
-    executor: clojure
+    executor: metabase-ci
     steps:
       - attach-workspace
       - run-on-change:
@@ -816,7 +812,7 @@ jobs:
   build-uberjar:
     parameters:
       <<: *Params
-    executor: clojure
+    executor: metabase-ci
     steps:
       - attach-workspace
       - run-on-change:
@@ -936,7 +932,7 @@ jobs:
 ########################################################################################################################
 
   deploy-master:
-    executor: clojure
+    executor: metabase-ci
     steps:
       - attach-workspace
       - run: ./bin/deploy-webhook $DEPLOY_WEBHOOK
