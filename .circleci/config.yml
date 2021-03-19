@@ -20,7 +20,7 @@ executors:
   tools:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: clojure/clojure:tools-deps-slim-buster
+      - image: clojure:tools-deps-slim-buster
 
   node:
     working_directory: /home/circleci/metabase/metabase/
