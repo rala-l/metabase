@@ -175,7 +175,7 @@ executors:
   fe-postgres-12:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image:metabase/ci:latest
+      - image: metabase/ci:latest
       - image: metabase/qa-databases:postgres-sample-12
 
   fe-mysql-8:
