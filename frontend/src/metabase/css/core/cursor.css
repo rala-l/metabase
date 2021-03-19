@@ -12,3 +12,8 @@
 :local(.cursor-default) {
   cursor: default;
 }
+
+.cursor-not-allowed,
+:local(.cursor-default) {
+  cursor: not-allowed;
+}
