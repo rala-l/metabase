@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import cx from "classnames";
 import { forceRedraw } from "metabase/lib/dom";
 import { t } from "ttag";
 import { KEYCODE_ENTER, KEYCODE_ESCAPE } from "metabase/lib/keyboard";
@@ -23,6 +24,7 @@ export default class TextWidget extends Component {
     commitImmediately: PropTypes.bool,
     placeholder: PropTypes.string,
     focusChanged: PropTypes.func,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,6 +50,7 @@ export default class TextWidget extends Component {
       className,
       isEditing,
       focusChanged: parentFocusChanged,
+      disabled,
     } = this.props;
     const defaultPlaceholder = this.state.isFocused
       ? ""
@@ -62,7 +65,8 @@ export default class TextWidget extends Component {
 
     return (
       <input
-        className={className}
+        disabled={disabled}
+        className={cx(disabled && "cursor-not-allowed", className)}
         type="text"
         value={this.state.value || ""}
         onChange={e => {

@@ -257,6 +257,7 @@ function Widget({
   const { type } = parameter;
   const DateWidget = DATE_WIDGETS[parameter.type];
   const fields = getFields(metadata, parameter);
+  const fieldOperator = getFieldOperator(type);
   if (DateWidget) {
     return (
       <DateWidget value={value} setValue={setValue} onClose={onPopoverClose} />
@@ -273,12 +274,14 @@ function Widget({
         setValue={setValue}
         isEditing={isEditing}
         focusChanged={onFocusChanged}
-        operator={getFieldOperator(type, fields)}
+        operator={fieldOperator}
       />
     );
   } else {
+    // if `fieldOperator` is defined then we want to show a `ParameterFieldWidget` but that requires the user to map fields to the parameter first
     return (
       <TextWidget
+        disabled={!!fieldOperator}
         value={value}
         setValue={setValue}
         className={className}
