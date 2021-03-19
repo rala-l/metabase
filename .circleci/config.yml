@@ -15,13 +15,8 @@ executors:
   clojure:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      - image: circleci/clojure:lein-2.9.5
+      - image: circleci/clojure:tools-deps-1.10.2.796
   
-  tools:
-    working_directory: /home/circleci/metabase/metabase/
-    docker:
-      - image: clojure:tools-deps-slim-buster
-
   node:
     working_directory: /home/circleci/metabase/metabase/
     docker:
@@ -526,7 +521,7 @@ jobs:
 
   check-migrations:
     executor:
-      tools
+      clojure
     steps:
       - attach-workspace
       - create-checksum-file:
