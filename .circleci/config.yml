@@ -17,11 +17,11 @@ executors:
     docker:
       - image: circleci/clojure:lein-2.9.5
 
+  # we should build custom image for this
   node:
     working_directory: /home/circleci/metabase/metabase/
     docker:
-      # - image: circleci/node:7-browsers
-      - image: cimg/node:lts
+      - image: circleci/clojure:lein-2.9.5-node-browsers
 
   clojure-and-node:
     working_directory: /home/circleci/metabase/metabase/
